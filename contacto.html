@@ -7,34 +7,43 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <script type="text/javascript"> emailjs.init('O06bpb2D0eJZvyk2l')</script>
+
 </head>
 <body>
-    <head>
+    <header>
         <ul>
             <li><a href="index.html">inicio</a></li> 
             <li ><a href="contacto.html">contacto</a></li> 
         </ul>
-    </head>
-    <div class="m-3">
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">nombre</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1"         placeholder="gabriela ejemplo">
-        </div>
-        <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">correo electronico</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1"         placeholder="name@example.com">
-        </div>
-        <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Mensaje</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-        </div>
-        <div class="mb-3">
-            <div class="g-recaptcha" data-sitekey="6LcYq_IrAAAAAOCRjcjWKq5IEow8xpYn5RiGnuAg"></div>
-        </div> <!--6LcYq_IrAAAAAHJWh65vi8aQDUNqOhiu43avlCOe-->
-        <div>
-            <input type="submit" value="enviar">
-        </div>
-    </div>
+    </header>
 
+    <form id="form">
+        <div class="m-3">
+            <div class="mb-3">
+                <label for="name" class="form-label">nombre</label>
+                <input type="text" name="name" class="form-control" id="name" placeholder="gabriela ejemplo">
+            </div>
+            <div class="mb-3">
+            <label for="email" class="form-label">correo electronico</label>
+                <input type="text" name="email" class="form-control" id="email" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Mensaje</label>
+                <textarea class="form-control" id="message" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <div class="g-recaptcha" data-sitekey="6LcYq_IrAAAAAOCRjcjWKq5IEow8xpYn5RiGnuAg"></div>
+            </div> <!--6LcYq_IrAAAAAHJWh65vi8aQDUNqOhiu43avlCOe-->
+            <div>
+                <input type="submit" value="enviar" id="button">
+            </div>
+        </div>
+    </form>
+    
+    <script src="app.js"></script>
 </body>
 </html>
