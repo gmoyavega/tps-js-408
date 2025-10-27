@@ -10,11 +10,10 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <script type="text/javascript"> emailjs.init('O06bpb2D0eJZvyk2l')</script>
-
 </head>
-<body>
 
- <style>
+<body>
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -83,6 +82,7 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            margin-top: 20px;
         }
 
         button:hover {
@@ -115,14 +115,13 @@
             color: white;
         }
     </style>
-</head>
-<body>
+
+
     <header>
         <h1>Contáctanos</h1>
     </header>
 
     <div class="container">
-        <!-- Formulario de Contacto -->
         <section class="contact-form">
             <h2>Envíanos un mensaje</h2>
             <form id="contactForm">
@@ -152,50 +151,48 @@
                 </div>
 
 
-                        <div class="mb-3">
-                <div class="g-recaptcha" data-sitekey="6LcYq_IrAAAAAOCRjcjWKq5IEow8xpYn5RiGnuAg"></div>
-            </div> <!--6LcYq_IrAAAAAHJWh65vi8aQDUNqOhiu43avlCOe-->
+                <div class="mb-3">
+                    <div class="g-recaptcha" data-sitekey="6LcYq_IrAAAAAOCRjcjWKq5IEow8xpYn5RiGnuAg"></div>
+                </div> <!--6LcYq_IrAAAAAHJWh65vi8aQDUNqOhiu43avlCOe-->
 
-            <button type="submit" name='button' id="button">Enviar Mensaje</button>
+                <button type="submit" name='button' id="button">Enviar Mensaje</button>
+            </form>
     
     <script src="app.js"></script>
 
 
 
 
+
+
+
+
+
     
 
-    <!--AKfycbz-1to8FKC96iUxsxINb7hA97ek1EazztvFk9TGNtWzgrKCsBDEsHGtcPxECYSPvuf47A-->
+    <script>
+const scriptURL = 'https://script.google.com/macros/s/AKfycbzm4pCII9ylyC1wN32vI_f8NdmnjTosiK-1PK72DwBI8VpMQWfuSoNP5Z0tzDvxJOoyrQ/exec';
 
-     <script>
-    const webAppUrl = "//script.google.com/macros/s/AKfycbz-1to8FKC96iUxsxINb7hA97ek1EazztvFk9TGNtWzgrKCsBDEsHGtcPxECYSPvuf47A/exec"; // Replace with your deployed Apps Script URL
+document.getElementById('form').addEventListener('submit', e => {
+  e.preventDefault();
 
-    // Fetch data from the sheet
-    fetch(webAppUrl)
-      .then(response => response.json())
-      .then(data => {
-        const container = document.getElementById('data-container');
-        data.forEach(row => {
-          const p = document.createElement('p');
-          p.textContent = row.join(', '); // Display each row
-          container.appendChild(p);
-        });
-      })
-      .catch(error => console.error('Error fetching data:', error));
+  const nombre = document.getElementById('nombre').value;
+  const email = document.getElementById('email').value;
 
-    // Submit data to the sheet
-    document.getElementById('data-form').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const formData = new FormData(this);
-      fetch(webAppUrl, {
-        method: 'POST',
-        body: new URLSearchParams(formData)
-      })
-      .then(response => response.text())
-      .then(message => alert(message))
-      .catch(error => console.error('Error submitting data:', error));
-    });
-  </script>
+  fetch(scriptURL, {
+    method: 'POST',
+    body: JSON.stringify({ nombre, email }),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => console.log("Datos enviados a Sheets"))
+  .catch(error => console.error("Error al enviar a Sheets", error));
+});
+</script>
+
+
+
+
+
 
 
 
