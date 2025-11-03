@@ -1,38 +1,34 @@
 const form = document.getElementById('contactForm');
 const btn = document.getElementById('button');
 
-form.addEventListener('submit', function(e) {
+form.addEventListener('submit', e => {
     e.preventDefault();
-    
-    // Deshabilitar botón y mostrar estado de carga
     btn.disabled = true;
     btn.value = 'Sending...';
 
-    // URL de Google Apps Script
+    // ===========================================================================================
+    // IMPORTANT:
+    // 1. Follow the instructions in `instructions.md` to deploy your Google Apps Script.
+    // 2. Replace the placeholder URL below with the Web App URL you get from the deployment.
+    // 3. **Make sure to deploy the script with "Execute as: Me" and "Who has access: Anyone".**
+    //    This is crucial to avoid `401 (Unauthorized)` errors.
+    // ===========================================================================================
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxCp8WdJzUx13oi6-OI6TJNfRsRos3_e2xztL-zho4oSS6bJ-rw1agndE87dJdAxoc6cA/exec';
 
-    // IDs de EmailJS
-    const serviceID = 'default_service';
-    const templateID = 'template_tthm3je';
-
-    // Primero enviar a Google Sheets
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
         .then(response => {
-            // Luego enviar el email con EmailJS
-            return emailjs.sendForm(serviceID, templateID, form);
-        })
-        .then(() => {
-            // Éxito - ambos servicios funcionaron
-            alert('Message sent successfully! The data should appear in your Google Sheet shortly.');
+            // The request was sent. The user can verify the data in their Google Sheet.
+            // Google Apps Script web apps often have complex redirect/CORS behavior
+            // that can make it tricky to read the response directly from the client.
+            // So we'll assume success and let the user know to check the sheet.
+            alert('Message sent! The data should appear in your Google Sheet shortly.');
             form.reset();
+            btn.disabled = false;
+            btn.value = 'Enviar Mensaje';
         })
         .catch(error => {
-            // Error en cualquier paso
-            console.error('Error!', error);
+            console.error('Error!', error.message);
             alert('An error occurred while sending the message. Please check the console for details and try again.');
-        })
-        .finally(() => {
-            // Siempre restaurar el botón
             btn.disabled = false;
             btn.value = 'Enviar Mensaje';
         });
