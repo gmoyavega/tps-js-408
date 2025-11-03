@@ -13,7 +13,7 @@ form.addEventListener('submit', e => {
     // 3. **Make sure to deploy the script with "Execute as: Me" and "Who has access: Anyone".**
     //    This is crucial to avoid `401 (Unauthorized)` errors.
     // ===========================================================================================
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxCp8WdJzUx13oi6-OI6TJNfRsRos3_e2xztL-zho4oSS6bJ-rw1agndE87dJdAxoc6cA/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwN9E8Wxp_AUbH-sTeS9uZybO_f4tyso0Gt1ejdEve3VjDfveC4Eazt3UkevBwgaxeRqw/exec';
 
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
         .then(response => {
