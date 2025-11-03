@@ -158,47 +158,11 @@
                 <button type="submit" name='button' id="button">Enviar Mensaje</button>
             </form>
     
-    <script src="app.js"></script>
-
-
-
-
-
-
-
-
-
-    
-
-    <script>
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzm4pCII9ylyC1wN32vI_f8NdmnjTosiK-1PK72DwBI8VpMQWfuSoNP5Z0tzDvxJOoyrQ/exec';
-
-document.getElementById('contact-form').addEventListener('submit', e => {
-  e.preventDefault();
-
-  const nombre = document.getElementById('nombre').value;
-  const email = document.getElementById('email').value;
-
-  fetch(scriptURL, {
-    method: 'POST',
-    body: JSON.stringify({ nombre, email }),
-    headers: { 'Content-Type': 'application/json' }
-  })
-  .then(response => console.log("Datos enviados a Sheets"))
-  .catch(error => console.error("Error al enviar a Sheets", error));
-});
-</script>
-
-
-
-
-
-
-
-
+    <script src="app.js"></script
 
 
 
 </body>
 </html>
+
 
