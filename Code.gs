@@ -26,15 +26,21 @@ function doPost (e) {
     return ContentService
       .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
       .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*")
   }
 
   catch (e) {
     return ContentService
       .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e }))
       .setMimeType(ContentService.MimeType.JSON)
+      .setHeader("Access-Control-Allow-Origin", "*")
   }
 
   finally {
     lock.releaseLock()
   }
+}
+
+function doGet(e){
+  return ContentService.createTextOutput("Method GET not allowed.");
 }
