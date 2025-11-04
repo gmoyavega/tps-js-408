@@ -3,7 +3,7 @@ const btn = document.getElementById('button');
 
 // 🔴 ¡IMPORTANTE! REEMPLAZA ESTA URL con la URL que obtienes al implementar
 // tu Google Apps Script como "Aplicación Web" con acceso "Cualquiera".
-const scriptURL = 'https://script.google.com/macros/s/AKfycbw6O-OfF3Ypvk7THLfp7G36AdDF9jB3IYv9bYIeuZ9GfwDbEVfWckZM4U5AVpZrm3CBLw/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbwsUqbMfu7tYsilCr8bRRcU21UMmjS6bm68gbi_X7BF2nwW1fE1lxhNG7SpvM8yX9u_Ww/exec';
 
 form.addEventListener('submit', e => {
     e.preventDefault(); // Detiene el envío de formulario tradicional
@@ -37,4 +37,5 @@ form.addEventListener('submit', e => {
         btn.textContent = 'Enviar Mensaje';
     });
 });
+
 
