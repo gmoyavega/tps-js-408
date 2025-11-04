@@ -13,7 +13,7 @@ form.addEventListener('submit', e => {
     // 3. **Make sure to deploy the script with "Execute as: Me" and "Who has access: Anyone".**
     //    This is crucial to avoid `401 (Unauthorized)` errors.
     // ===========================================================================================
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwx86ava0St2k1ZLJIZ_j9HG9cLBI111pxizxbu9s6TeKttIk7MLU3lUdgrgh79dnhTyA/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyRt3LwJS9x8bhJ3AJCx0sQH8YL40jW8w8A1G6wIDEJO4wymWowHYj4dgYCLHPn9Dq8bQ/exec';
 
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
         .then(response => {
@@ -33,4 +33,5 @@ form.addEventListener('submit', e => {
             btn.value = 'Enviar Mensaje';
         });
 });
+
 
