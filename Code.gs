@@ -22,7 +22,7 @@ function doPost(e) {
 
     // Paso 2: Abrir la Hoja de Cálculo
     const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getSheetByName(SHEET_NAME);
+    const sheet = spreadsheet.getSheetByName(Hoja1);
 
     // Verificación de seguridad adicional
     if (!sheet) {
