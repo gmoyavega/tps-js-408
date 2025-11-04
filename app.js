@@ -14,7 +14,7 @@ form.addEventListener('submit', e => {
     // sea compatible con cómo Google Apps Script espera el objeto 'e.parameter'.
     const formData = new FormData(form);
     const searchParams = new URLSearchParams(formData);
-
+    // Hacer consol log con search params (VER)
     fetch(scriptURL, { 
         method: 'POST', 
         // Enviamos los datos en formato URL-encoded, que es ideal para GAS
@@ -42,6 +42,7 @@ form.addEventListener('submit', e => {
         btn.textContent = 'Enviar Mensaje';
     });
 });
+
 
 
 
