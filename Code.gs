@@ -1,68 +1,71 @@
-// 1. Configuración: ¡REEMPLAZA ESTE VALOR AHORA!
-// 🚩 ¡CORRECCIÓN CRÍTICA! DEBE ser el ID de la hoja, no el nombre del archivo.
-const SPREADSHEET_ID = 'Envíos del formulario de contacto'; 
-const SHEET_NAME = 'Hoja1'; // Asegúrate de que el nombre de la pestaña sea correcto
+// 1. Configuración: ¡Verifica estos dos valores de nuevo!
+// CRÍTICO: Debe ser el ID (la cadena alfanumérica larga)
+const SPREADSHEET_ID = '10rKsoSBO_sdfT0ayRof0SpUJnu1wPBrQijwzWKpZGN5-kM69veBVw3xc'; 
+// CRÍTICO: Debe ser el nombre exacto de la pestaña
+const SHEET_NAME = 'Hoja1'; 
 
 /**
- * Se ejecuta cuando el código recibe una solicitud POST (envío de formulario).
- * @param {object} e El objeto de evento que contiene los datos enviados.
- * @returns {object} Una respuesta de texto para el navegador.
+ * Función principal para manejar solicitudes HTTP POST (envío de formulario).
  */
 function doPost(e) {
   try {
-    // Paso 1: Obtener los datos del formulario
+    // Paso 1: Obtener los datos del formulario (e.parameter)
     const datosRecibidos = e.parameter;
 
-    // 🚩 ¡CORRECCIÓN! Extrayendo todos los campos presentes en tu HTML:
+    // Extracción de todos los 5 campos de tu HTML
     const nombre = datosRecibidos.nombre;
     const email = datosRecibidos.email;
-    const telefono = datosRecibidos.telefono; // Nuevo campo
-    const asunto = datosRecibidos.asunto;     // Nuevo campo
-    const mensaje = datosRecibidos.mensaje;   // Nuevo campo
+    const telefono = datosRecibidos.telefono;
+    const asunto = datosRecibidos.asunto;    
+    const mensaje = datosRecibidos.mensaje;  
 
     // Paso 2: Abrir la Hoja de Cálculo
+    // Si esta línea falla, el ID o los permisos son incorrectos.
     const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = spreadsheet.getSheetByName(Hoja1);
+    const sheet = spreadsheet.getSheetByName(SHEET_NAME);
 
-    // Verificación de seguridad adicional
+    // Si la hoja no se encuentra (nombre incorrecto)
     if (!sheet) {
-        throw new Error(`La hoja con el nombre "${SHEET_NAME}" no fue encontrada.`);
+        throw new Error(`Error: La pestaña con el nombre "${SHEET_NAME}" no fue encontrada.`);
     }
 
-    // Paso 3: Crear el array de la nueva fila de datos
+    // Paso 3: Crear el array de la nueva fila (Asegúrate de tener 6 columnas en tu hoja)
     const timestamp = new Date(); 
     
-    // 🚩 ¡CORRECCIÓN! La nueva fila incluye todos los campos del formulario.
+    // Orden de las columnas: Fecha, Nombre, Email, Teléfono, Asunto, Mensaje
     const newRow = [
-      timestamp, // 1. Marca de tiempo
-      nombre,    // 2. Nombre
-      email,     // 3. Email
-      telefono,  // 4. Teléfono
-      asunto,    // 5. Asunto
-      mensaje    // 6. Mensaje
+      timestamp, 
+      nombre,    
+      email,     
+      telefono,  
+      asunto,    
+      mensaje    
     ];
 
     // Paso 4: Escribir la fila en la hoja
     sheet.appendRow(newRow);
 
-    // Paso 5: Devolver una respuesta de éxito
+    // Paso 5: Respuesta de éxito (para que app.js no arroje error)
     return ContentService.createTextOutput(JSON.stringify({
       result: 'success',
-      message: `¡Datos de ${nombre} guardados exitosamente!`
+      message: `Datos guardados.`
     })).setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
-    // Paso 6: Devolver una respuesta de error si algo falla
-    Logger.log('ERROR EN SCRIPT: ' + error.message); 
+    // Paso 6: Captura cualquier error, lo registra y lo envía al cliente.
+    Logger.log('ERROR CRÍTICO INTERNO: ' + error.message); 
+    
     return ContentService.createTextOutput(JSON.stringify({
       result: 'error',
-      message: 'Error al procesar la solicitud. Revisa los Logs de Ejecución en Apps Script.',
-      details: error.message
+      message: 'Fallo al guardar. Revisa los logs de Apps Script.',
+      details: error.message 
     })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
 function doGet(e) {
-  return ContentService.createTextOutput("Servicio activo. Usa POST para enviar datos.")
+  return ContentService.createTextOutput("Servicio de POST activo.")
     .setMimeType(ContentService.MimeType.TEXT);
 }
+
+   
