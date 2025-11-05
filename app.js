@@ -28,7 +28,7 @@ form.addEventListener('submit', e => {
     .then(response => {
         // En este punto, la comunicación es exitosa.
         console.log('Success! La respuesta de Google fue:', response);
-        alert('¡Mensaje enviado! Los datos deberían estar en tu Hoja de Cálculo.');
+        alert('¡Mensaje enviado!');
         
         form.reset();
         btn.disabled = false;
@@ -42,6 +42,7 @@ form.addEventListener('submit', e => {
         btn.textContent = 'Enviar Mensaje';
     });
 });
+
 
 
 
