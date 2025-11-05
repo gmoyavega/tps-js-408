@@ -1,7 +1,7 @@
 const form = document.getElementById('contactForm');
 const btn = document.getElementById('button');
 
-// 🔴 ¡IMPORTANTE! Reemplaza esta URL con la URL de tu Web App de GAS.
+
 const scriptURL = 'https://script.google.com/macros/s/AKfycbw7LOPc6WZxCGqJQe-AfUFSg6c-VLm-bGqAif5ZVovDWabkRRYmyJlb07QzQH_AcbDj9g/exec';
 
 form.addEventListener('submit', e => {
@@ -42,6 +42,7 @@ form.addEventListener('submit', e => {
         btn.textContent = 'Enviar Mensaje';
     });
 });
+
 
 
 
