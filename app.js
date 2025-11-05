@@ -2,7 +2,7 @@ const form = document.getElementById('contactForm');
 const btn = document.getElementById('button');
 
 // 🔴 ¡IMPORTANTE! Reemplaza esta URL con la URL de tu Web App de GAS.
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwpe36E8GAq_ncTiHtLZ2LQgZk8rEZGuW9Cs0IALAzAgro5cPGcJIar98q3iFw4VHOodA/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbw7LOPc6WZxCGqJQe-AfUFSg6c-VLm-bGqAif5ZVovDWabkRRYmyJlb07QzQH_AcbDj9g/exec';
 
 form.addEventListener('submit', e => {
     e.preventDefault(); 
@@ -42,6 +42,7 @@ form.addEventListener('submit', e => {
         btn.textContent = 'Enviar Mensaje';
     });
 });
+
 
 
 
