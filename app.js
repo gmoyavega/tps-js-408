@@ -1,6 +1,6 @@
 const form = document.getElementById('contactForm');
 const btn = document.getElementById('button');
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwVfijbqxR1aWBltx0dlZZj8yxkKSXq9ITDsgFsXqoaRci1I2pYYqS9_bTvaksfPKUibg/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbyiIQaUod5b5JRvEE8kHrCsswtLXJNZwKO11YtNmVu9ixDDM-FC0n_kWHyq8B4FdZYK8g/exec';
 
 form.addEventListener('submit', e => {
     e.preventDefault(); 
@@ -51,3 +51,4 @@ form.addEventListener('submit', e => {
         btn.textContent = 'Enviar Mensaje';
     });
 });
+
