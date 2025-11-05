@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-   
+    <title>Formulario de Contacto</title>
+    
+    <!-- Librerías externas del usuario -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-    <script type="text/javascript"> emailjs.init('O06bpb2D0eJZvyk2l')</script>
+    
+    <!-- Inicialización de EmailJS (Mantenido según tu estructura, aunque la lógica usa GAS) -->
+    <script type="text/javascript"> 
+        emailjs.init('O06bpb2D0eJZvyk2l')
+    </script>
 </head>
 
 <body>
     <style>
+        /* CSS del usuario */
         * {
             margin: 0;
             padding: 0;
@@ -83,28 +87,16 @@
             cursor: pointer;
             font-size: 16px;
             margin-top: 20px;
+            transition: background-color 0.3s;
         }
 
-        button:hover {
+        button:hover:not(:disabled) {
             background-color: #1b0a29;
         }
-
-        .contact-info {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .info-item {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .info-item i {
-            margin-right: 10px;
-            color: #3498db;
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         footer {
@@ -115,7 +107,6 @@
             color: white;
         }
     </style>
-
 
     <header>
         <h1>Contáctanos</h1>
@@ -150,19 +141,79 @@
                     <textarea id="mensaje" name="mensaje" required></textarea>
                 </div>
 
-
                 <div class="mb-3">
+                    <!-- reCAPTCHA del usuario -->
                     <div class="g-recaptcha" data-sitekey="6LcYq_IrAAAAAOCRjcjWKq5IEow8xpYn5RiGnuAg"></div>
-                </div> <!--6LcYq_IrAAAAAHJWh65vi8aQDUNqOhiu43avlCOe-->
+                </div>
 
-                <button type="submit" name='button' id="button">Enviar Mensaje</button>
+                <button type="submit" id="button">Enviar Mensaje</button>
             </form>
+        </section>
+    </div>
     
-    <script src="app.js"> </script>
+    <footer>
+        <p>&copy; 2024 Contacto</p>
+    </footer>
 
+    <!-- Bloque JavaScript para el envío a Google Apps Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('contactForm');
+            const btn = document.getElementById('button');
 
+            // CRÍTICO: Pega tu URL de Google Apps Script DESPLEGADA aquí.
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxdJN22oetgz16Q-55tySsKgSElwPjNeQY3e7mvuWoYoaiIKKnOLUkemjzFB5V64OF86g/exec';
 
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                
+                // 1. Deshabilitar botón
+                btn.disabled = true;
+                btn.textContent = 'Enviando...';
+                
+                // 2. Preparar los datos para Apps Script
+                const formData = new FormData(form);
+                const searchParams = new URLSearchParams(formData);
+
+                // 3. Envío al Apps Script
+                fetch(scriptURL, {
+                    method: 'POST',
+                    // Importante: body como URLSearchParams y header para Apps Script (e.parameter)
+                    body: searchParams,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    redirect: 'follow'
+                })
+                .then(response => {
+                    // El Apps Script devuelve JSON, lo parseamos
+                    // Si el script de GAS fue exitoso, devolverá JSON. Si falla la red, irá al .catch.
+                    return response.json(); 
+                })
+                .then(result => {
+                    // Manejar la respuesta exitosa o de error de Apps Script
+                    if (result.result === 'success') {
+                        console.log('Success! Datos guardados en Google Sheets:', result.message);
+                        alert('¡Mensaje enviado y datos guardados!'); 
+                        form.reset();
+                    } else {
+                        // Si el script devolvió un error (ej. hoja no encontrada, fallo interno)
+                        console.error('Error de Apps Script:', result.details);
+                        alert(`Ocurrió un error al guardar: ${result.details}`);
+                    }
+                })
+                .catch(error => {
+                    // Error de red (fetch falló)
+                    console.error('Error de conexión:', error.message);
+                    alert('Ocurrió un error de conexión. Revisa la consola para más detalles.');
+                })
+                .finally(() => {
+                    // 4. Restaurar el botón
+                    btn.disabled = false;
+                    btn.textContent = 'Enviar Mensaje';
+                });
+            });
+        });
+    </script>
 </body>
 </html>
-
-
