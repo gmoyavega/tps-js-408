@@ -7,12 +7,10 @@
     
     <!-- Librerías externas del usuario -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     
     <!-- Inicialización de EmailJS (Mantenido según tu estructura, aunque la lógica usa GAS) -->
-    <script type="text/javascript"> 
-        emailjs.init('O06bpb2D0eJZvyk2l')
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 </head>
 
 <body>
@@ -157,64 +155,73 @@
 
     <!-- Bloque JavaScript para el envío a Google Apps Script -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('contactForm');
-            const btn = document.getElementById('button');
+    document.addEventListener('DOMContentLoaded', () => {
 
-            // CRÍTICO: Pega tu URL de Google Apps Script DESPLEGADA aquí.
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbyiIQaUod5b5JRvEE8kHrCsswtLXJNZwKO11YtNmVu9ixDDM-FC0n_kWHyq8B4FdZYK8g/exec';
+    // Inicializar EmailJS 
+    emailjs.init('O06bpb2D0eJZvyk2l');
 
-            form.addEventListener('submit', e => {
-                e.preventDefault();
-                
-                // 1. Deshabilitar botón
-                btn.disabled = true;
-                btn.textContent = 'Enviando...';
-                
-                // 2. Preparar los datos para Apps Script
-                const formData = new FormData(form);
-                const searchParams = new URLSearchParams(formData);
+    const form = document.getElementById('contactForm');
+    const btn = document.getElementById('button');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyiIQaUod5b5JRvEE8kHrCsswtLXJNZwKO11YtNmVu9ixDDM-FC0n_kWHyq8B4FdZYK8g/exec';
 
-                // 3. Envío al Apps Script
-                fetch(scriptURL, {
-                    method: 'POST',
-                    // Importante: body como URLSearchParams y header para Apps Script (e.parameter)
-                    body: searchParams,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    redirect: 'follow'
-                })
-                .then(response => {
-                    // El Apps Script devuelve JSON, lo parseamos
-                    // Si el script de GAS fue exitoso, devolverá JSON. Si falla la red, irá al .catch.
-                    return response.json(); 
-                })
-                .then(result => {
-                    // Manejar la respuesta exitosa o de error de Apps Script
-                    if (result.result === 'success') {
-                        console.log('Success! Datos guardados en Google Sheets:', result.message);
-                        alert('¡Mensaje enviado y datos guardados!'); 
-                        form.reset();
-                    } else {
-                        // Si el script devolvió un error (ej. hoja no encontrada, fallo interno)
-                        console.error('Error de Apps Script:', result.details);
-                        alert(`Ocurrió un error al guardar: ${result.details}`);
-                    }
-                })
-                .catch(error => {
-                    // Error de red (fetch falló)
-                    console.error('Error de conexión:', error.message);
-                    alert('Ocurrió un error de conexión. Revisa la consola para más detalles.');
-                })
-                .finally(() => {
-                    // 4. Restaurar el botón
-                    btn.disabled = false;
-                    btn.textContent = 'Enviar Mensaje';
-                });
-            });
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+
+        // Validar formulario
+        if (!form.checkValidity()) {
+            alert('Por favor, completa todos los campos requeridos correctamente.');
+            return;
+        }
+
+        // Validar reCAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+            alert('Por favor, completa el reCAPTCHA.');
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+
+        const formData = new FormData(form);
+        const searchParams = new URLSearchParams(formData);
+
+        // Enviar los datos a Google Sheets
+        fetch(scriptURL, { 
+            method: 'POST', 
+            body: searchParams,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+            redirect: 'follow'
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+            return response.text(); // Tu GAS devuelve texto o JSON
+        })
+        .then(data => {
+            console.log('Guardado en Google Sheets:', data);
+
+            // Enviar el correo con EmailJS
+            const serviceID = 'service_dlpq70m';
+            const templateID = 'template_tthm3je';
+            return emailjs.sendForm(serviceID, templateID, form);
+        })
+        .then(() => {
+            alert('¡Mensaje enviado correctamente y datos guardados!');
+            form.reset();
+            grecaptcha.reset();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ocurrió un error: ' + error.message);
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.textContent = 'Enviar Mensaje';
         });
-    </script>
+    });
+});
+</script>
+
 </body>
 </html>
 
