@@ -2,7 +2,7 @@ const form = document.getElementById('contactForm');
 const btn = document.getElementById('button');
 
 
-const scriptURL = 'https://script.google.com/macros/s/AKfycbw7LOPc6WZxCGqJQe-AfUFSg6c-VLm-bGqAif5ZVovDWabkRRYmyJlb07QzQH_AcbDj9g/exec';
+const scriptURL = 'https://script.google.com/macros/s/AKfycbxdJN22oetgz16Q-55tySsKgSElwPjNeQY3e7mvuWoYoaiIKKnOLUkemjzFB5V64OF86g/exec';
 
 form.addEventListener('submit', e => {
     e.preventDefault(); 
@@ -42,6 +42,7 @@ form.addEventListener('submit', e => {
         btn.textContent = 'Enviar Mensaje';
     });
 });
+
 
 
 
