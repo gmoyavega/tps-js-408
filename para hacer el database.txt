@@ -1,0 +1,277 @@
+
+Script para HTML: 
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+<script>
+  // Tu configuración de Firebase
+  const firebaseConfig = {
+    apiKey: "...",
+    authDomain: "...",
+    // ... otros campos
+  };
+
+  // Inicializar Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth(); // Referencia al módulo de Auth
+</script>
+
+
+Registrar un usuario:
+
+// Asume que tienes campos 'emailInput' y 'passwordInput' en tu HTML
+const email = document.getElementById('emailInput').value;
+const password = document.getElementById('passwordInput').value;
+
+auth.createUserWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    // Registro exitoso. userCredential.user contiene la información del nuevo usuario
+    console.log("Usuario registrado con éxito:", userCredential.user);
+    // Opcional: Guardar datos adicionales en la Realtime Database o Firestore
+    // Aquí puedes enlazar la información del usuario con un nuevo registro de base de datos
+  })
+  .catch((error) => {
+    // Manejar errores (ej. contraseña débil, correo ya registrado)
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.error("Error de registro:", errorMessage);
+    alert(`Error: ${errorMessage}`);
+  });
+
+Para iniciar session:
+
+// Asume que tienes campos 'emailInput' y 'passwordInput' en tu HTML
+const email = document.getElementById('emailInput').value;
+const password = document.getElementById('passwordInput').value;
+
+auth.signInWithEmailAndPassword(email, password)
+  .then((userCredential) => {
+    // Inicio de sesión exitoso
+    const user = userCredential.user;
+    console.log("Inicio de sesión exitoso. Bienvenido:", user.email);
+    // Redirigir al usuario a la página principal o área privada
+    window.location.href = '/home.html'; 
+  })
+  .catch((error) => {
+    // Manejar errores (ej. usuario no encontrado, contraseña incorrecta)
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.error("Error de login:", errorMessage);
+    alert(`Error de credenciales: ${errorMessage}`);
+  });
+
+
+Autenticación:
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    // El usuario ha iniciado sesión
+    console.log("Usuario actual:", user.email);
+    // Puedes usar user.uid para acceder a datos protegidos en la base de datos
+    // ej: database.ref(`usuarios/${user.uid}/perfil`).once('value', ...);
+    document.getElementById('loginArea').style.display = 'none';
+    document.getElementById('userDashboard').style.display = 'block';
+  } else {
+    // El usuario ha cerrado sesión o no ha iniciado
+    console.log("No hay usuario activo.");
+    document.getElementById('loginArea').style.display = 'block';
+    document.getElementById('userDashboard').style.display = 'none';
+  }
+});
+
+cierre de session:
+document.getElementById('logoutButton').addEventListener('click', () => {
+  auth.signOut().then(() => {
+    // Sesión cerrada con éxito
+    console.log("Sesión cerrada.");
+    // Opcional: Redirigir a la página de login
+    window.location.href = '/login.html';
+  }).catch((error) => {
+    // Ocurrió un error
+    console.error("Error al cerrar sesión:", error);
+  });
+});
+
+
+hacer un HTML separado : ' login.html' 
+
+
+html completo: 
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Mi Aplicación</title>
+    <style>
+        /* Estilos básicos para centrar el formulario */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Asegura que el padding no añada ancho extra */
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+
+        <form id="loginForm">
+            <div>
+                <label for="emailInput">Correo Electrónico:</label>
+                <input type="email" id="emailInput" required>
+            </div>
+            <div>
+                <label for="passwordInput">Contraseña:</label>
+                <input type="password" id="passwordInput" required>
+            </div>
+            
+            <button type="submit">Acceder</button>
+            <p id="error-message"></p>
+        </form>
+
+        <p style="text-align: center; margin-top: 15px;">
+            ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
+        </p>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    
+    <script>
+        // *** CONFIGURACIÓN DE FIREBASE ***
+        // ¡DEBES REEMPLAZAR ESTOS VALORES CON LOS DE TU PROYECTO DE FIREBASE!
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY_AQUI", 
+            authDomain: "TU_DOMINIO.firebaseapp.com",
+            projectId: "tu-proyecto-id",
+            // ... otros campos si son necesarios (storageBucket, messagingSenderId, appId)
+        };
+
+        // Inicializar Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        // ---------------------------------
+
+
+        // Referencias a elementos del DOM
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMessage = document.getElementById('error-message');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Evita el envío tradicional del formulario
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            errorMessage.textContent = ''; // Limpiar mensajes de error previos
+
+            // Lógica de inicio de sesión de Firebase
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Inicio de sesión exitoso
+                    console.log("Inicio de sesión exitoso. UID:", userCredential.user.uid);
+                    
+                    // *** ACCIÓN POST-LOGIN ***
+                    // Redirigir al usuario a la página principal de la aplicación (Dashboard)
+                    window.location.href = 'index.html'; // Cambia esto por la ruta de tu página principal
+                })
+                .catch((error) => {
+                    // Manejo de errores
+                    console.error("Error de login:", error);
+                    let message = "Error desconocido.";
+
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            message = 'Usuario no encontrado. Verifica el correo.';
+                            break;
+                        case 'auth/wrong-password':
+                            message = 'Contraseña incorrecta.';
+                            break;
+                        case 'auth/invalid-email':
+                            message = 'El formato del correo es inválido.';
+                            break;
+                        default:
+                            message = 'Error al iniciar sesión. Intenta nuevamente.';
+                            break;
+                    }
+                    errorMessage.textContent = message;
+                });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+Instrucciones :
+Reemplaza la Configuración:
+
+ Tienes que ir a la Consola de Firebase de tu proyecto, obtener tu configuración y reemplazar los valores en la variable firebaseConfig dentro de la etiqueta <script>.
+
+Habilita el Proveedor:
+
+Asegúrate de haber habilitado "Correo electrónico/Contraseña" en la sección Authentication > Sign-in method de tu consola de Firebase.
+
+Crea index.html:
+
+Este código asume que tienes una página principal llamada index.html a la que se redirigirá al usuario después de iniciar sesión correctamente.
+
+Crea registro.html (Opcional):
+
+Si también quieres una página de registro separada, crea un archivo para manejar la función createUserWithEmailAndPassword().
