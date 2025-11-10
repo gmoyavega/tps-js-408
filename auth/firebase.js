@@ -1,16 +1,13 @@
-// Importar Firebase desde CDN
+
+// Importar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getDatabase, ref, set, get, child } 
-    from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 // Configuración de tu proyecto
 const firebaseConfig = {
     apiKey: "AIzaSyC2BSFYZBvIF7cxUr7xUvZKmlhg0ACk504",
     authDomain: "tp-js-48675.firebaseapp.com",
-    databaseURL: "https://tp-js-48675-default-rtdb.firebaseio.com",
     projectId: "tp-js-48675",
     storageBucket: "tp-js-48675.firebasestorage.app",
     messagingSenderId: "930594601481",
@@ -18,42 +15,56 @@ const firebaseConfig = {
     measurementId: "G-GN0C2S2GSS"
 };
 
-// Inicializar Firebase
+// Inicializar
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getDatabase(app);
-const analytics = getAnalytics(app);
 
-// ==========================
-// FUNCIONES DE REGISTRO
-// ==========================
-function registrarUsuario(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
-}
+/* ==========================
+    REGISTRO
+========================== */
+const btnRegister = document.getElementById("buttonregister");
+if (btnRegister) {
+    btnRegister.addEventListener("click", (e) => {
+    e.preventDefault();
 
-// ==========================
-// FUNCIONES DE LOGIN
-// ==========================
-function loginUsuario(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
-}
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const password2 = document.getElementById("password2").value;
 
-// ==========================
-// FUNCIONES DE BASE DE DATOS
-// ==========================
-function guardarUsuarioDB(uid, datos) {
-    return set(ref(db, "usuarios/" + uid), datos);
-}
-
-async function leerUsuariosDB() {
-    const dbRef = ref(db);
-    const snapshot = await get(child(dbRef, "usuarios"));
-    if (snapshot.exists()) {
-        return snapshot.val();
-    } else {
-        return null;
+    if (password !== password2) {
+        alert("Las contraseñas no coinciden");
+        return;
     }
+
+    createUserWithEmailAndPassword(auth, email, password)
+        .then(() => {
+        alert("Usuario creado con éxito");
+        window.location.href = "login.html";
+        })
+        .catch((error) => {
+        alert("Error: " + error.message);
+        });
+    });
 }
 
-// Exportamos todo para usar en otros archivos
-export { auth, db, registrarUsuario, loginUsuario, guardarUsuarioDB, leerUsuariosDB };
+/* ==========================
+    LOGIN
+========================== */
+const btnLogin = document.getElementById("buttonlogin");
+if (btnLogin) {
+    btnLogin.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+        alert("Bienvenido!");
+        window.location.href = "../paginas/principal.html";
+        })
+        .catch((error) => {
+        alert("Error: " + error.message);
+        });
+    });
+}
