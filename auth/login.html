@@ -13,6 +13,7 @@
                 <nav>
                     <ul>
                         <li><a href="../index.html">volver</a></li>
+                        <li><a href="#" id="logout-link" style="display: none;">Cerrar Sesión</a></li> 
                     </ul>
                 </nav>
             </div>
@@ -46,8 +47,34 @@
             text-align: center;
         }
 
- 
-                .login-container {
+        /* Estilos para la navegación */
+        nav ul {
+            list-style: none;
+            display: flex; /* Para poner los elementos de la nav en una sola línea */
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin: 0 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #3a153b;
+        }
+        /* Fin de estilos para la navegación */
+
+
+        .login-container {
             background-color: #fff;
             padding: 30px;
             border-radius: 8px;
@@ -57,20 +84,20 @@
             margin-top: 50px;
         }
 
-                h2 {
+        h2 {
             text-align: center;
             color: #333;
             margin-bottom: 20px;
         }
 
-                label {
+        label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
         }
 
-                input[type="email"], input[type="password"] {
+        input[type="email"], input[type="password"] {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -79,7 +106,7 @@
             box-sizing: border-box; /* Asegura que el padding no añada ancho extra */
         }
 
-                button {
+        button {
             width: 100%;
             padding: 10px;
             background-color: #1b0a29;
@@ -90,23 +117,17 @@
             font-size: 16px;
         }
 
-                button:hover {
+        button:hover {
             background-color: #1b0a29;
         }
 
-                #error-message {
+        #error-message {
             color: red;
             text-align: center;
             margin-top: 10px;
             font-weight: bold;
         }
-
-         
-
-
-
-
-    </style>
+        </style>
 
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
@@ -136,3 +157,4 @@
 
     </body>
 </html>
+              
