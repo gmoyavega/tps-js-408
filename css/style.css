@@ -24,7 +24,6 @@ nav {
 
 nav ul {
     list-style: none;
-    /* Ya tienes display: flex, lo cual es CORRECTO */
     display: flex;
     justify-content: flex-start;
     gap: 2rem;
@@ -66,12 +65,16 @@ nav a:hover::after {
 }
 
 /* ========================================= */
-/* ESTILOS AÑADIDOS PARA CERRAR SESIÓN */
+/* ESTILOS AÑADIDOS/CORREGIDOS PARA CERRAR SESIÓN */
 /* ========================================= */
 
 .nav-right {
-    /* CLAVE: Esto empuja el elemento al extremo derecho */
+    /* **CLAVE** 1: Oculta el botón por defecto. JavaScript lo mostrará (display: flex) al iniciar sesión. */
+    display: none; 
+    
+    /* CLAVE 2: Esto empuja el elemento al extremo derecho */
     margin-left: auto; 
+    
     /* Alinea el enlace de Cerrar Sesión verticalmente */
     align-self: center;
 }
