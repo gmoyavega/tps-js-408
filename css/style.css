@@ -24,6 +24,7 @@ nav {
 
 nav ul {
     list-style: none;
+    /* Ya tienes display: flex, lo cual es CORRECTO */
     display: flex;
     justify-content: flex-start;
     gap: 2rem;
@@ -62,6 +63,34 @@ nav a::after {
 
 nav a:hover::after {
     width: 80%;
+}
+
+/* ========================================= */
+/* ESTILOS AÑADIDOS PARA CERRAR SESIÓN */
+/* ========================================= */
+
+.nav-right {
+    /* CLAVE: Esto empuja el elemento al extremo derecho */
+    margin-left: auto; 
+    /* Alinea el enlace de Cerrar Sesión verticalmente */
+    align-self: center;
+}
+
+.nav-right a {
+    /* Estilos para que el botón destaque y no tenga el efecto de subida */
+    background-color: #d9534f; /* Fondo rojo */
+    border: 1px solid #d9534f;
+    transform: none; 
+}
+
+.nav-right a:hover {
+    /* Color de fondo más oscuro al pasar el ratón */
+    background-color: #c9302c; 
+}
+
+/* Quita el efecto de la línea de abajo para este botón */
+.nav-right a::after {
+    display: none; 
 }
 
 
