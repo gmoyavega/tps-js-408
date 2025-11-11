@@ -5,8 +5,8 @@ import {
     getAuth, 
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
-    signOut, // <<-- AGREGADO
-    onAuthStateChanged // <<-- AGREGADO
+    signOut,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 // Configuración de tu proyecto
@@ -75,35 +75,36 @@ if (btnLogin) {
 }
 
 
-/* 
- LOG OUT
- */
+/* ==========================
+    LOG OUT (VISIBILIDAD Y FUNCIÓN)
+========================== */
+
 const logoutLink = document.getElementById('logout-link');
 
+// OBTENEMOS EL ELEMENTO <li> PADRE (que es el que hay que ocultar/mostrar)
+const logoutListItem = logoutLink ? logoutLink.parentElement : null; 
+
 onAuthStateChanged(auth, (user) => {
-    if (logoutLink) {
+    if (logoutListItem) { 
         if (user) {
-            // Usuario logueado: Muestra el enlace de Log Out
-            logoutLink.style.display = 'block'; 
+            // Usuario logueado: Muestra el LI. Usamos 'flex' porque el UL es flex.
+            logoutListItem.style.display = 'flex'; 
         } else {
-            // Usuario no logueado: Oculta el enlace de Log Out
-            logoutLink.style.display = 'none';
+            // Usuario no logueado: Oculta el LI.
+            logoutListItem.style.display = 'none';
         }
     }
 });
 
-/* ==========================
-    LOG OUT
-========================== */
 if (logoutLink) {
     logoutLink.addEventListener('click', (e) => {
-        e.preventDefault(); // Evita la navegación predeterminada del enlace
+        e.preventDefault(); 
 
         signOut(auth).then(() => {
             // Cierre de sesión exitoso.
             alert("Sesión cerrada. ¡Vuelve pronto!");
-            // Redirige al usuario a la página de inicio o login
-            window.location.href = "../index.html"; // Asegúrate de que esta sea la URL de inicio
+            // Redirige al usuario a la página de inicio
+            window.location.href = "../index.html"; 
         }).catch((error) => {
             // Ocurrió un error.
             console.error("Error al cerrar sesión:", error);
