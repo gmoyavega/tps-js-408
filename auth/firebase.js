@@ -1,24 +1,23 @@
-// Importar Firebase
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-// Importaciones de Auth: Agregamos signOut y onAuthStateChanged
 import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut,
     onAuthStateChanged,
-    sendPasswordResetEmail
+    signOut
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
 import {
-    getFirestore,
-    collection,
-    addDoc
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+    getDatabase,
+    ref,
+    set,
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 // Configuración de tu proyecto
 const firebaseConfig = {
     apiKey: "AIzaSyC2BSFYZBvIF7cxUr7xUvZKmlhg0ACk504",
     authDomain: "tp-js-48675.firebaseapp.com",
+    databaseURL: "https://tp-js-48675-default-rtdb.firebaseio.com",
     projectId: "tp-js-48675",
     storageBucket: "tp-js-48675.firebasestorage.app",
     messagingSenderId: "930594601481",
@@ -26,112 +25,109 @@ const firebaseConfig = {
     measurementId: "G-GN0C2S2GSS"
 };
 
-// Inicializar la App y Auth fuera del DOMContentLoaded
+// Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = getDatabase(app);
 
+/* ==========================
+    REGISTRO
+========================== */
+const btnRegister = document.getElementById("buttonregister");
+if (btnRegister) {
+    btnRegister.addEventListener("click", (e) => {
+        e.preventDefault();
 
-// Ejecutamos todo el código que interactúa con el DOM (elementos HTML)
-document.addEventListener('DOMContentLoaded', () => {
+        const email = document.getElementById("email").value;
+        const nombre = document.getElementById("nombre").value;
+        const apellido = document.getElementById("apellido").value;
+        const password = document.getElementById("password").value;
+        const password2 = document.getElementById("password2").value;
+        const telefono = document.getElementById("phone").value
 
-    /* ==========================
-        REGISTRO
-    ========================== */
-    const registerForm = document.getElementById("registerForm");
-    if (registerForm) {
-        registerForm.addEventListener("submit", (e) => {
-            e.preventDefault();
+        const recaptchaResponse = grecaptcha.getResponse();
 
-            const nombre = document.getElementById("nombre").value;
-            const apellido = document.getElementById("apellido").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            const password2 = document.getElementById("password2").value;
-            const phone = document.getElementById("phone").value;
-            const recaptchaResponse = grecaptcha.getResponse();
+        if (recaptchaResponse.length === 0) {
+            alert("Por favor, verifica que no eres un robot.");
+            return;
+        }
 
-            if (recaptchaResponse.length === 0) {
-                alert("Por favor, verifica que no eres un robot.");
-                return;
-            }
+        if (password !== password2) {
+            alert("Las contraseñas no coinciden");
+            return;
+        }
 
-            if (password !== password2) {
-                alert("Las contraseñas no coinciden");
-                return;
-            }
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
 
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    return addDoc(collection(db, "users"), {
-                        uid: user.uid,
-                        nombre: nombre,
-                        apellido: apellido,
-                        phone: phone
-                    });
+                console.log("Intentando guardar datos en la base de datos…");
+
+                // 📦 Guardar datos en Realtime Database
+                set(ref(db, "usuarios/" + user.uid), {
+                    nombre: nombre,
+                    apellido: apellido,
+                    email: email,
+                    telefono: telefono,
+                    creadoEl: new Date().toISOString()
                 })
                 .then(() => {
+                    console.log("✅ Datos guardados correctamente en la BD");
                     alert("Usuario creado con éxito");
                     window.location.href = "login.html";
                 })
                 .catch((error) => {
-                    alert("Error: " + error.message);
+                    console.error("❌ Error al guardar en la BD:", error);
                 });
-        });
-    }
+                
+            })
+            .catch((error) => {
+                alert("Error: " + error.message);
+            });
+    });
+}
 
-    /* ==========================
-        LOGIN
-    ========================== */
-    const loginForm = document.getElementById("loginForm");
-    if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
-            e.preventDefault();
 
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            const recaptchaResponse = grecaptcha.getResponse();
+/* ==========================
+    LOGIN
+========================== */
+const btnLogin = document.getElementById("buttonlogin");
+if (btnLogin) {
+    btnLogin.addEventListener("click", (e) => {
+        e.preventDefault();
 
-            if (recaptchaResponse.length === 0) {
-                alert("Por favor, verifica que no eres un robot.");
-                return;
-            }
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-            signInWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    alert("Bienvenido!");
-                    window.location.href = "../principal.html";
-                })
-                .catch((error) => {
-                    let message = "Ocurrió un error inesperado.";
-                    switch (error.code) {
-                        case "auth/invalid-credential":
-                            message = "Las credenciales proporcionadas no son válidas. Por favor, verifica tu correo y contraseña.";
-                            break;
-                        case "auth/wrong-password":
-                            message = "La contraseña es incorrecta. Por favor, inténtalo de nuevo.";
-                            break;
-                        case "auth/user-not-found":
-                            message = "No se encontró ningún usuario con este correo electrónico.";
-                            break;
-                        case "auth/invalid-email":
-                            message = "El formato del correo electrónico no es válido.";
-                            break;
-                        default:
-                            message = "Error: " + error.message;
-                            break;
-                    }
-                    alert(message);
-                });
-        });
-    }
+        const recaptchaResponse = grecaptcha.getResponse();
+
+        if (recaptchaResponse.length === 0) {
+            alert("Por favor, verifica que no eres un robot.");
+            return;
+        }
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                window.location.href = "../principal.html";
+            })
+            .catch((error) => {
+                alert("Error: " + error.message);
+            });
+    });
+}
+
+
+
+
+
+
 
 
     /* ==========================
         FORGOT PASSWORD
     ========================== */
     const forgotPasswordForm = document.getElementById("forgotPasswordForm");
+
     if (forgotPasswordForm) {
         forgotPasswordForm.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -140,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             sendPasswordResetEmail(auth, email)
                 .then(() => {
-                    alert("Se ha enviado un correo para restablecer tu contraseña.");
+                    alert("Hemos enviado un correo para restablecer tu contraseña.");
                     window.location.href = "login.html";
                 })
                 .catch((error) => {
@@ -149,51 +145,49 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     /* ==========================
-        LOG OUT (VISIBILIDAD Y FUNCIÓN)
+        LOGOUT Y VISIBILIDAD
     ========================== */
 
-    const loginLink = document.getElementById('login-link');
-    const registerLink = document.getElementById('register-link');
-    const logoutLink = document.getElementById('logout-link');
+    const loginLink = document.getElementById("login-link");
+    const registerLink = document.getElementById("register-link");
+    const logoutLink = document.getElementById("logout-link");
 
-    // OBTENEMOS EL ELEMENTO <li> PADRE (que es el que hay que ocultar/mostrar)
-    const loginListItem = loginLink ? loginLink.parentElement : null;
-    const registerListItem = registerLink ? registerLink.parentElement : null;
-    const logoutListItem = logoutLink ? logoutLink.parentElement : null;
+    const loginItem = loginLink ? loginLink.parentElement : null;
+    const registerItem = registerLink ? registerLink.parentElement : null;
+    const logoutItem = logoutLink ? logoutLink.parentElement : null;
 
-    // Lógica para mostrar/ocultar al cambiar el estado de autenticación
     onAuthStateChanged(auth, (user) => {
-        if (loginListItem && logoutListItem) {
+        if (loginItem && logoutItem) {
             if (user) {
-                // Usuario logueado: Muestra el LI de logout y oculta el de login.
-                loginListItem.style.display = 'none';
-                logoutListItem.style.display = 'flex';
+                loginItem.style.display = "none";
+                logoutItem.style.display = "flex";
             } else {
-                // Usuario no logueado: Oculta el LI de logout y muestra el de login.
-                loginListItem.style.display = 'flex';
-                logoutListItem.style.display = 'none';
+                loginItem.style.display = "flex";
+                logoutItem.style.display = "none";
             }
         }
-        if (registerListItem) {
-            registerListItem.style.display = 'none';
+
+        if (registerItem) {
+            registerItem.style.display = "none";
         }
     });
 
-    // Lógica para el clic de Cerrar Sesión
     if (logoutLink) {
-        logoutLink.addEventListener('click', (e) => {
+        logoutLink.addEventListener("click", (e) => {
             e.preventDefault();
 
-            signOut(auth).then(() => {
-                alert("Sesión cerrada. ¡Vuelve pronto!");
-                // Redirige al usuario a la página de inicio
-                window.location.href = "../index.html";
-            }).catch((error) => {
-                console.error("Error al cerrar sesión:", error);
-                alert("Hubo un error al cerrar la sesión.");
-            });
+            signOut(auth)
+                .then(() => {
+                    alert("Sesión cerrada.");
+                    window.location.href = "../index.html";
+                })
+                .catch((error) => {
+                    console.error("Error al cerrar sesión:", error);
+                    alert("Hubo un error al cerrar la sesión.");
+                });
         });
     }
 
-});
+
